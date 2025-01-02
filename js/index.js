@@ -30,3 +30,20 @@ searchInput.addEventListener('change', (e) => {
         });
 });
 
+// Tro ly ao
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+const recognition = new SpeechRecognition()
+const microphone = document.querySelector('.microphone')
+microphone.addEventListener('click', (e) => {
+    e.preventDefault()
+
+    recognition.start()
+})
+
+recognition.onspeechend = () => {
+    recognition.stop()
+
+}
+recognition.onError = (err) => {
+    console.log(err)
+}
