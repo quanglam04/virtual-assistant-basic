@@ -30,6 +30,20 @@ searchInput.addEventListener('change', (e) => {
         });
 });
 
+/*
+Một số sự kiện phổ biến trong Web Speech API:
+ - onstart : khi nhận diện giọng nói bắt đầu
+ - onend : khi nhận diện giọng nói kết thúc
+ - onaudiostart : Khi hệ thống bắt đầu thu âm
+ - onaudioend : Khi hệ thống dừng thu âm
+ - onsoundstart : Khi bắt đầu phát hiện âm thanh
+ - onsoundend : Khi dừng phát hiện âm thanh
+ - onspeechstart : Khi bắt đầu phát hiện giọng nói
+ - onspeeched : Khi dừng phát hiện giọng nói
+ - onerror : Khi xảy ra lỗi trong nhận diện giọng nói
+
+*/
+
 // Tro ly ao
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 const recognition = new SpeechRecognition()
@@ -39,7 +53,6 @@ recognition.continuous = false
 const microphone = document.querySelector('.microphone')
 microphone.addEventListener('click', (e) => {
     e.preventDefault()
-    console.log("Su kien click")
     recognition.start()
 })
 
@@ -47,9 +60,9 @@ recognition.onspeechend = () => {
     recognition.stop()
 
 }
-recognition.onError = (err) => {
+recognition.onerror = (err) => {
     console.log(err)
 }
-recognition.onResult = (e) => {
-    console.log(e)
+recognition.onresult = (e) => {
+    console.log('onresult', e)
 }
