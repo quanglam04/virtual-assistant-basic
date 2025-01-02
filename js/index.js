@@ -14,7 +14,6 @@ const sunset = document.querySelector('.sunset');
 const humidity = document.querySelector('.humidity');
 const windSpeed = document.querySelector('.wind-speed');
 //test
-alert("trinhquanglam")
 searchInput.addEventListener('change', (e) => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${e.target.value}&appid=${APP_ID}&units=metric&lang=vi`)
         .then(async res => {
