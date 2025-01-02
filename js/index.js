@@ -5,6 +5,8 @@ const cityName = document.querySelector('.city-name');
 const weatherState = document.querySelector('.weather-state');
 const weatherIcon = document.querySelector('.weather-icon');
 const temperature = document.querySelector('.temperature');
+const container = document.querySelector('.container')
+const microphone = document.querySelector('.microphone')
 
 
 const sunrise = document.querySelector('.sunrise');
@@ -53,6 +55,7 @@ recognition.continuous = false
 const handleVoice = (text) => {
     console.log(text)
     const handledText = text.toLowerCase()
+    // thời tiết tại [thành phố]
     if (handledText.includes('thời tiết tại')) {
         const location = handledText.split('tại')[1].trim()
         console.log('location', location)
@@ -61,11 +64,19 @@ const handleVoice = (text) => {
         searchInput.dispatchEvent(changedEvent)
         return
     }
+    // thay đổi màu nền [blue]
+    if (handledText.includes('thay đổi màu nền')) {
+        const color = handledText.split('màu nền')[1].trim()
+        container.style.background = color
+    }
+
+    if (handledText.includes('màu nền mặc định')) {
+        container.style.background = ''
+    }
 
 
 }
 
-const microphone = document.querySelector('.microphone')
 microphone.addEventListener('click', (e) => {
     e.preventDefault()
     recognition.start()
