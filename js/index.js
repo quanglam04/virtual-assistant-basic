@@ -50,19 +50,39 @@ const recognition = new SpeechRecognition()
 recognition.lang = 'vi-Vi' // Nhận diện dọng nói bằng tiếng việt
 recognition.continuous = false
 
+const handleVoice = (text) => {
+    console.log(text)
+    const handledText = text.toLowerCase()
+    if (handledText.includes('thời tiết tại')) {
+        const location = handledText.split('tại')[1].trim()
+        console.log('location', location)
+        searchInput.value = location
+        const changedEvent = new Event('change')
+        searchInput.dispatchEvent(changedEvent)
+        return
+    }
+
+
+}
+
 const microphone = document.querySelector('.microphone')
 microphone.addEventListener('click', (e) => {
     e.preventDefault()
     recognition.start()
+    microphone.classList.add('recording')
 })
 
 recognition.onspeechend = () => {
     recognition.stop()
+    microphone.classList.remove('recording')
 
 }
 recognition.onerror = (err) => {
     console.log(err)
+    microphone.classList.remove('recording')
 }
 recognition.onresult = (e) => {
     console.log('onresult', e)
+    const text = e.results[0][0].transcript
+    handleVoice(text)
 }
