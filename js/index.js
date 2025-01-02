@@ -33,10 +33,13 @@ searchInput.addEventListener('change', (e) => {
 // Tro ly ao
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 const recognition = new SpeechRecognition()
+recognition.lang = 'vi-Vi' // Nhận diện dọng nói bằng tiếng việt
+recognition.continuous = false
+
 const microphone = document.querySelector('.microphone')
 microphone.addEventListener('click', (e) => {
     e.preventDefault()
-
+    console.log("Su kien click")
     recognition.start()
 })
 
@@ -46,4 +49,7 @@ recognition.onspeechend = () => {
 }
 recognition.onError = (err) => {
     console.log(err)
+}
+recognition.onResult = (e) => {
+    console.log(e)
 }
