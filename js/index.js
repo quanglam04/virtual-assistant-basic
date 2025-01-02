@@ -7,7 +7,7 @@ const weatherIcon = document.querySelector('.weather-icon');
 const temperature = document.querySelector('.temperature');
 const container = document.querySelector('.container')
 const microphone = document.querySelector('.microphone')
-
+const synth = window.speechSynthesis
 
 const sunrise = document.querySelector('.sunrise');
 const sunset = document.querySelector('.sunset');
@@ -51,6 +51,21 @@ var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 recognition.lang = 'vi-Vi' // Nhận diện dọng nói bằng tiếng việt
 recognition.continuous = false
+const speak = (text) => {
+    if (synth.speaking) {
+        console.log('Busy. Speaking...')
+        return
+    }
+    const ulter = new SpeechSynthesisUtterance(text)
+    ulter.onend = () => {
+        console.log('end')
+    }
+    ulter.onerror = (error) => {
+        console.log('error')
+    }
+    synth.speak(ulter)
+
+}
 
 const handleVoice = (text) => {
     console.log(text)
@@ -73,6 +88,14 @@ const handleVoice = (text) => {
     if (handledText.includes('màu nền mặc định')) {
         container.style.background = ''
     }
+
+    // hiển thị thời gian
+    if (handledText.includes('mấy giờ')) {
+        const textToSpeech = `${moment().hour()} hour ${moment().minutes()} minutes `
+        speak(textToSpeech)
+        return;
+    }
+    speak('Please try again')
 
 
 }
