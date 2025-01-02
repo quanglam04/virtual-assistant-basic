@@ -5,7 +5,9 @@ const cityName = document.querySelector('.city-name');
 const weatherState = document.querySelector('.weather-state');
 const weatherIcon = document.querySelector('.weather-icon');
 const temperature = document.querySelector('.temperature');
-
+const container = document.querySelector('.container')
+const microphone = document.querySelector('.microphone')
+const synth = window.speechSynthesis
 
 const sunrise = document.querySelector('.sunrise');
 const sunset = document.querySelector('.sunset');
@@ -30,3 +32,91 @@ searchInput.addEventListener('change', (e) => {
         });
 });
 
+/*
+Một số sự kiện phổ biến trong Web Speech API:
+ - onstart : khi nhận diện giọng nói bắt đầu
+ - onend : khi nhận diện giọng nói kết thúc
+ - onaudiostart : Khi hệ thống bắt đầu thu âm
+ - onaudioend : Khi hệ thống dừng thu âm
+ - onsoundstart : Khi bắt đầu phát hiện âm thanh
+ - onsoundend : Khi dừng phát hiện âm thanh
+ - onspeechstart : Khi bắt đầu phát hiện giọng nói
+ - onspeeched : Khi dừng phát hiện giọng nói
+ - onerror : Khi xảy ra lỗi trong nhận diện giọng nói
+
+*/
+
+// Tro ly ao
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+const recognition = new SpeechRecognition()
+recognition.lang = 'vi-Vi' // Nhận diện dọng nói bằng tiếng việt
+recognition.continuous = false
+const speak = (text) => {
+    if (synth.speaking) {
+        console.log('Busy. Speaking...')
+        return
+    }
+    const ulter = new SpeechSynthesisUtterance(text)
+    ulter.onend = () => {
+        console.log('end')
+    }
+    ulter.onerror = (error) => {
+        console.log('error')
+    }
+    synth.speak(ulter)
+
+}
+
+const handleVoice = (text) => {
+    console.log(text)
+    const handledText = text.toLowerCase()
+    // thời tiết tại [thành phố]
+    if (handledText.includes('thời tiết tại')) {
+        const location = handledText.split('tại')[1].trim()
+        console.log('location', location)
+        searchInput.value = location
+        const changedEvent = new Event('change')
+        searchInput.dispatchEvent(changedEvent)
+        return
+    }
+    // thay đổi màu nền [blue]
+    if (handledText.includes('thay đổi màu nền')) {
+        const color = handledText.split('màu nền')[1].trim()
+        container.style.background = color
+    }
+
+    if (handledText.includes('màu nền mặc định')) {
+        container.style.background = ''
+    }
+
+    // hiển thị thời gian
+    if (handledText.includes('mấy giờ')) {
+        const textToSpeech = `${moment().hour()} hour ${moment().minutes()} minutes `
+        speak(textToSpeech)
+        return;
+    }
+    speak('Please try again')
+
+
+}
+
+microphone.addEventListener('click', (e) => {
+    e.preventDefault()
+    recognition.start()
+    microphone.classList.add('recording')
+})
+
+recognition.onspeechend = () => {
+    recognition.stop()
+    microphone.classList.remove('recording')
+
+}
+recognition.onerror = (err) => {
+    console.log(err)
+    microphone.classList.remove('recording')
+}
+recognition.onresult = (e) => {
+    console.log('onresult', e)
+    const text = e.results[0][0].transcript
+    handleVoice(text)
+}
